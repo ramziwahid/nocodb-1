@@ -5,7 +5,7 @@ services:
     image: postgres
     restart: always
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - ncdb_data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: postgres
@@ -15,6 +15,15 @@ services:
       interval: 10s
       timeout: 2s
       retries: 10
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
   nocodb:
     depends_on:
       root_db:
@@ -24,9 +33,9 @@ services:
       - "8080:8080"
     restart: always
     volumes:
-      - nc_data:/usr/app/data
+      - ncapp_data:/usr/app/data
     environment:
       NC_DB: "pg://root_db:5432?u=postgres&p=password&d=root_db"
 volumes:
-  db_data: {}
-  nc_data: {}
+  ncdb_data: {}
+  ncapp_data: {}
